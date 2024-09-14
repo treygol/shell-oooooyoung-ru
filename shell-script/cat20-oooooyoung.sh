@@ -4,12 +4,12 @@ Red_font_prefix="\033[31m"
 Green_background_prefix="\033[42;37m"
 Red_background_prefix="\033[41;37m"
 Font_color_suffix="\033[0m"
-Info="[${Green_font_prefix}信息${Font_color_suffix}]"
-Error="[${Red_font_prefix}错误${Font_color_suffix}]"
-Tip="[${Green_font_prefix}注意${Font_color_suffix}]"
+Info="[${Green_font_prefix}Информация${Font_color_suffix}]"
+Error="[${Red_font_prefix}Ошибка${Font_color_suffix}]"
+Tip="[${Green_font_prefix}Уведомление${Font_color_suffix}]"
 
 check_root() {
-    [[ $EUID != 0 ]] && echo -e "${Error} 当前非ROOT账号(或没有ROOT权限), 无法继续操作, 请更换ROOT账号或使用 ${Green_background_prefix}sudo su${Font_color_suffix} 命令获取临时ROOT权限（执行后可能会提示输入当前账号的密码）。" && exit 1
+    [[ $EUID != 0 ]] && echo -e "${Error} Текущая учетная запись без ROOT-прав, Невозможно продолжить, Получите ROOT ${Green_background_prefix}sudo su${Font_color_suffix} Команда для получения ROOT-прав(после выполнения может быть предложено ввести пароль текущей учётной записи). " && exit 1
 }
 
 install_env_and_full_node() {
@@ -69,19 +69,19 @@ create_wallet() {
   sudo yarn cli wallet create
   echo -e "\n"
   sudo yarn cli wallet address
-  echo -e "请保存上面创建好的钱包地址、助记词"
+  echo -e "Пожалуйста, сохраните адрес кошелька и сид-фразу, созданную выше."
 }
 
 start_mint_cat() {
   # Prompt for token ID
-  read -p "请输入要 mint 的 tokenId: " tokenId
+  read -p "Введите ID токена: " tokenId
 
   # Prompt for gas (maxFeeRate)
-  read -p "请设定要 mint 的 gas: " newMaxFeeRate
+  read -p "Установите газ для минта: " newMaxFeeRate
   sed -i "s/\"maxFeeRate\": [0-9]*/\"maxFeeRate\": $newMaxFeeRate/" ~/cat-token-box/packages/cli/config.json
 
   # Prompt for amount to mint
-  read -p "请输入要 mint 的数量: " amount
+  read -p "Количество: " amount
 
   cd ~/cat-token-box/packages/cli
 
@@ -93,7 +93,7 @@ start_mint_cat() {
       $command
 
       if [ $? -ne 0 ]; then
-          echo "命令执行失败，退出循环"
+          echo "Не удалось выполнить команду"
           exit 1
       fi
 
@@ -111,31 +111,31 @@ check_wallet_balance() {
 }
 
 send_token() {
-  read -p "请输入tokenId (不是代币名字): " tokenId
-  read -p "请输入接收地址: " receiver
-  read -p "请输入转账数量: " amount
+  read -p "Введите ID токена(не название): " tokenId
+  read -p "Адрес получателя: " receiver
+  read -p "Количество токенов: " amount
   cd ~/cat-token-box/packages/cli
   sudo yarn cli send -i $tokenId $receiver $amount
   if [ $? -eq 0 ]; then
-      echo -e "${Info} 转账成功"
+      echo -e "${Info} Токены успешно отправлены"
   else
-      echo -e "${Error} 转账失败，请检查信息后重试"
+      echo -e "${Error} Не удалось отправить, проверьте информацию и попробуйте снова"
   fi
 }
 
 
-echo && echo -e " ${Red_font_prefix}dusk_network 一键安装脚本${Font_color_suffix} by \033[1;35moooooyoung\033[0m
-此脚本完全免费开源, 由推特用户 ${Green_font_prefix}@ouyoung11开发${Font_color_suffix}, 
-欢迎关注, 如有收费请勿上当受骗。
+echo && echo -e " ${Red_font_prefix}dusk_network Установка в один клик${Font_color_suffix} by \033[1;35moooooyoung\033[0m
+Этот скрипт полностью бесплатный и с открытым исходным кодом, создан пользователем Twitter. ${Green_font_prefix}@ouyoung11 Разработчик${Font_color_suffix}, 
+Добро пожаловать!
  ———————————————————————
- ${Green_font_prefix} 1.安装依赖环境和全节点 ${Font_color_suffix}
- ${Green_font_prefix} 2.创建钱包 ${Font_color_suffix}
- ${Green_font_prefix} 3.查看钱包余额情况 ${Font_color_suffix}
- ${Green_font_prefix} 4.开始 mint cat20 代币 ${Font_color_suffix}
- ${Green_font_prefix} 5.查看节点同步日志 ${Font_color_suffix}
- ${Green_font_prefix} 6.转账 cat20 代币 ${Font_color_suffix}
+ ${Green_font_prefix} 1.Установка ${Font_color_suffix}
+ ${Green_font_prefix} 2.Создать кошелёк ${Font_color_suffix}
+ ${Green_font_prefix} 3.Проверить баланс ${Font_color_suffix}
+ ${Green_font_prefix} 4.Минт токенов ${Font_color_suffix}
+ ${Green_font_prefix} 5.Логи синхронизации ${Font_color_suffix}
+ ${Green_font_prefix} 6.Перевод токенов ${Font_color_suffix}
  ———————————————————————" && echo
-read -e -p " 请参照上面的步骤，请输入数字:" num
+read -e -p " Следуйте инструкциям выше и введите номер:" num
 case "$num" in
 1)
     install_env_and_full_node
@@ -157,6 +157,6 @@ case "$num" in
     ;;
 *)
     echo
-    echo -e " ${Error} 请输入正确的数字"
+    echo -e " ${Error} Введите правильный номер"
     ;;
 esac
